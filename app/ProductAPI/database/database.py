@@ -2,7 +2,7 @@ from cassandra.cluster import Cluster
 
 KEYSPACE = "warehouse"
 
-
+session = None
 
 def connect_to_cassandra():
     """
@@ -36,5 +36,12 @@ def create_keyspace_and_table(session):
 
 
 def init_db():
+    global session
     session = connect_to_cassandra()
     create_keyspace_and_table(session)
+
+def get_session():
+    global session
+    if session is None:
+        raise Exception("Session not initialized.")
+    return session
