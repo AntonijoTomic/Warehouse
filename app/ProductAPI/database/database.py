@@ -25,14 +25,21 @@ def create_keyspace_and_table(session):
         CREATE TABLE IF NOT EXISTS products (
             product_id UUID PRIMARY KEY,
             name TEXT,
-            category TEXT,
+            category_id  TEXT,
             price FLOAT,
             quantity INT,
             description TEXT,
             created_at TIMESTAMP
         );
     """)
-    print("Keyspace and table 'products' success!")
+    
+    session.execute("""
+        CREATE TABLE IF NOT EXISTS categories (
+            category_id UUID PRIMARY KEY,
+            name TEXT
+        );
+    """)
+
 
 
 def init_db():

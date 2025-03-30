@@ -3,6 +3,8 @@ from datetime import datetime
 from models.product import *
 from database.database import get_session
 from fastapi import HTTPException, status
+from typing import List, Optional
+
 
 def insert_product(data: ProductIn):
     session = get_session()
@@ -10,12 +12,12 @@ def insert_product(data: ProductIn):
     now = datetime.utcnow()
 
     session.execute("""
-        INSERT INTO products (product_id, name, category, price, quantity, description, created_at)
+        INSERT INTO products (product_id, name, category_id, price, quantity, description, created_at)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
     """, (
         product_id,
         data.name,
-        data.category,
+        str(data.category_id), 
         data.price,
         data.quantity,
         data.description,
@@ -27,23 +29,30 @@ def insert_product(data: ProductIn):
         "created_at": now.isoformat()
     }
 
-def get_all_products():
-    session = get_session()
-    rows = session.execute("SELECT * FROM products")
-    products = []
 
-    for row in rows:
+def get_all_products(category_id: Optional[UUID] = None) -> List[ProductOut]:
+    session = get_session()
+
+    if category_id:
+        result = session.execute(
+            "SELECT * FROM products WHERE category_id = %s ALLOW FILTERING", (str(category_id),)
+        )
+    else:
+        result = session.execute("SELECT * FROM products")
+
+    products = []
+    for row in result:
         products.append(ProductOut(
             product_id=row.product_id,
             name=row.name,
-            category=row.category,
+            category_id=UUID(row.category_id),
             price=row.price,
             quantity=row.quantity,
             description=row.description,
             created_at=row.created_at
         ))
-
     return products
+
 
 def get_product_by_id(product_id: UUID):
     session = get_session()

@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from typing import List
 from models.product import *
 from services.product_service import *
-
+from uuid import UUID
 router = APIRouter()
 
 @router.post("/products")
@@ -16,6 +16,14 @@ def create_product(product: ProductIn):
 @router.get("/products", response_model=List[ProductOut])
 def read_all_products():
     return get_all_products()
+
+
+
+
+@router.get("/products/by-category/{category_id}", response_model=List[ProductOut])
+def get_products_by_category(category_id: UUID):
+    return get_all_products(category_id=category_id)
+
 
 @router.get("/products/{product_id}", response_model=ProductOut)
 def read_product(product_id: UUID):
