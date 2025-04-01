@@ -24,6 +24,7 @@ def insert_product(data: ProductIn):
         now
     ))
 
+
     return {
         "product_id": str(product_id),
         "created_at": now.isoformat()
