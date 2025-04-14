@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+cassandra-driver
+passlib[bcrypt]
+python-jose[cryptography]
+python-dotenv
+email-validator

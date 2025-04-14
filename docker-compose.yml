@@ -1,0 +1,45 @@
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    networks:
+      - app_net
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
+  authapi:
+    build: ./app/AuthAPI
+    container_name: authapi
+    ports:
+      - "8005:8000"
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    networks:
+      - app_net
+
+  productapi:
+    build: ./app/ProductAPI
+    container_name: productapi
+    ports:
+      - "8002:8000"
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge

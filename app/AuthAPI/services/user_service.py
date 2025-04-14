@@ -48,5 +48,6 @@ def verify_user(data: UserLogin):
     if not pwd_context.verify(data.password, row.password):
         raise HTTPException(status_code=401, detail="Neispravan email ili lozinka.")
 
-    token = create_access_token({"sub": row.email})
+    token = create_access_token({"sub": row.email}, role=row.role)
+
     return {"access_token": token, "token_type": "bearer"}
