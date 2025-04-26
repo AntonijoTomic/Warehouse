@@ -132,3 +132,16 @@ def delete_product(product_id: UUID):
 
     return {"message": "Proizvod obrisan."}
     
+    
+def calculate_product_stats():
+    products = get_all_products()
+    total_products = len(products)
+    total_value = sum(p.price * p.quantity for p in products)
+    top_products = sorted(products, key=lambda p: p.quantity, reverse=True)[:5]
+    
+    return {
+        "total_products": total_products,
+        "total_value": total_value,
+        "top_products": top_products
+    }
+    

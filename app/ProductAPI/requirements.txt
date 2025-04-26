@@ -3,3 +3,4 @@ uvicorn
 cassandra-driver
 python-jose[cryptography]
 python-dotenv
+requests

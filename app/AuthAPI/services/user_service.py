@@ -26,7 +26,7 @@ def create_user(data: UserIn):
     session.execute("""
         INSERT INTO users (user_id, email, password, role, created_at)
         VALUES (%s, %s, %s, %s, %s)
-    """, (user_id, data.email, hashed_pw, "user", now))
+    """, (user_id, data.email, hashed_pw, "admin", now))
 
     return {
         "user_id": str(user_id),
